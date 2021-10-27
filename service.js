@@ -29,6 +29,47 @@ connection.connect(error => {
   }
 });
 
+//*************** */ ADDING HERE ****************//
+// Query for inserting a new row into database (Date Given)
+service.post('/', (request, response) => {
+
+    if (request.body.hasOwnProperty('username') &&
+      request.body.hasOwnProperty('screen_name')) {
+  
+      const params = [
+        request.body.username,
+        request.body.screen_name,
+      ];
+  
+      const query = 'INSERT INTO humans(username, screen_name) VALUES (?, ?)';
+  
+      connection.query(query, params, (error, result) => {
+        if (error) {
+          response.status(500);
+          response.json({
+            ok: false,
+            results: error.message,
+          });
+        } else {
+          response.json({
+            ok: true,
+            results: result.insertId,
+          });
+        }
+      });
+  
+  
+    } else {
+  
+      response.status(400);
+      response.json({
+        ok: false,
+        results: 'Incomplete expenses data.',
+      });
+    }
+  
+  });
+
 const port = 5001;
 service.listen(port, () => {
   console.log(`We're live in port ${port}!`);
