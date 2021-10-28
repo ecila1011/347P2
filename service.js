@@ -37,6 +37,7 @@ function rowFormat(row) {
 }
 
 //*************** */ ADDING HERE ****************//
+// serves out the report.html file
 service.get('/report.html', function(req, res) {
   res.sendFile(path.join(__dirname, '/report.html'));
 });
@@ -117,11 +118,11 @@ service.post('/second_list', (request, response) => {
   
 });
 
-// get all item info in both lists
-service.get("/all", (request, response) => {
+// get all item info from both lists
+service.get("/first_list", (request, response) => {
 
   const params = "";
-  const query = 'SELECT id, item, used FROM first_list';
+  const query = 'SELECT * FROM first_list, second_list';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
@@ -232,6 +233,30 @@ service.get("/second_list/:id", (request, response) => {
   
 });
 
+// Randomly select an item from each list
+service.get("/random", (request, response) => {
+
+  const params = "";
+  const query = 'SELECT item FROM first_list, second_list ORDER BY NEWID()';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
+      response.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+
+      response.json({
+        ok: true,
+        results: rows.map(rowFormat),
+      });
+    }
+  });
+
+});
+
 // fix the spelling of a word in the first list
 service.patch("/first_list/:id", (request, response) => {
 
@@ -258,11 +283,15 @@ service.patch("/first_list/:id", (request, response) => {
 
 });
 
-// reset the used boolean for an item using the item id
+
+// fix the spelling of a word in the first list
 service.patch("/second_list/:id", (request, response) => {
 
-  const params = [parseInt(request.params.id)];
-  const query = 'SELECT * FROM second_list WHERE id = ?';
+  const params = [
+    request.body.item,
+    parseInt(request.params.id)
+  ];
+  const query = 'UPDATE item FROM second_list WHERE id = ?';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
