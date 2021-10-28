@@ -118,28 +118,28 @@ service.post('/second_list', (request, response) => {
   
 });
 
-// get all item info from both lists
-service.get("/all", (request, response) => {
+// // get all item info from both lists
+// service.get("/all", (request, response) => {
 
-  const params = "";
-  const query = 'SELECT * FROM first_list, second_list';
+//   const params = "";
+//   const query = 'SELECT * FROM first_list, second_list';
 
-  connection.query(query, params, (error, rows) => {
-    if (error) {
-      response.status(500);
-      response.json({
-        ok: false,
-        results: error.message,
-      });
-    } else {
+//   connection.query(query, params, (error, rows) => {
+//     if (error) {
+//       response.status(500);
+//       response.json({
+//         ok: false,
+//         results: error.message,
+//       });
+//     } else {
 
-      response.json({
-        ok: true,
-        results: rows.map(rowFormat),
-      });
-    }
-  });
-});
+//       response.json({
+//         ok: true,
+//         results: rows.map(rowFormat),
+//       });
+//     }
+//   });
+// });
 
 // get all item names in the first list
 service.get("/first_list", (request, response) => {
@@ -237,7 +237,7 @@ service.get("/second_list/:id", (request, response) => {
 service.get("/random", (request, response) => {
 
   const params = "";
-  const query = 'SELECT item FROM first_list, second_list ORDER BY NEWID()';
+  const query = 'SELECT TOP 1 item FROM first_list, second_list ORDER BY NEWID()';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
