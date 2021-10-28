@@ -36,6 +36,18 @@ function rowFormat(row) {
 }
 
 //*************** */ ADDING HERE ****************//
+service.get('/name', function (req, res, next) {
+
+  var fileName = req.params.name
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      next(err)
+    } else {
+      console.log('Sent:', fileName)
+    }
+  })
+})
+
 // Query for inserting a new entry into the first list
 service.post('/first_list', (request, response) => {
 
@@ -58,7 +70,6 @@ service.post('/first_list', (request, response) => {
           response.json({
             ok: true,
             results: result.insertId,
-            used: false,
           });
         }
       });
@@ -97,7 +108,6 @@ service.post('/second_list', (request, response) => {
           response.json({
             ok: true,
             results: result.insertId,
-            used: false,
           });
         }
       });
@@ -201,7 +211,6 @@ service.get("/first_list/:id", (request, response) => {
         response.json({
           ok: true,
           results: rows.map(rowFormat),
-          used: true,
         });
       }
     });
@@ -224,18 +233,20 @@ service.get("/second_list/:id", (request, response) => {
       } else {
         response.json({
           ok: true,
-          used: true,
         });
       }
     });
   
 });
 
-// reset the used boolean for an item using the item id
+// fix the spelling of a word in the first list
 service.patch("/first_list/:id", (request, response) => {
 
-  const params = [parseInt(request.params.id)];
-  const query = 'SELECT * FROM first_list WHERE id = ?';
+  const params = [
+    request.body.item,
+    parseInt(request.params.id)
+  ];
+  const query = 'UPDATE item FROM first_list WHERE id = ?';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
