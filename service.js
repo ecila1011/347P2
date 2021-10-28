@@ -38,7 +38,7 @@ function rowFormat(row) {
 //*************** */ ADDING HERE ****************//
 service.get('/report.html', function (req, res, next) {
 
-  var fileName = "report.html"
+  var fileName = "report.html";
   res.sendFile(fileName, options, function (err) {
     if (err) {
       next(err)
