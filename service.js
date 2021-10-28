@@ -114,11 +114,11 @@ service.post('/second_list', (request, response) => {
   
 });
 
-// get both lists (all possible item entries)
+// get all item info in both lists
 service.get("/all", (request, response) => {
 
-  const params = [parseInt(request.params.id)];
-  const query = 'SELECT * FROM first_list';
+  const params = "";
+  const query = 'SELECT item, id, used FROM first_list, second_list';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
@@ -132,7 +132,6 @@ service.get("/all", (request, response) => {
       response.json({
         ok: true,
         results: rows.map(rowFormat),
-        used: true,
       });
     }
   });
@@ -143,6 +142,29 @@ service.get("/first_list", (request, response) => {
 
   const params = "";
   const query = 'SELECT item FROM first_list';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
+      response.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+
+      response.json({
+        ok: true,
+        results: rows.map(rowFormat),
+      });
+    }
+  });
+});
+
+// get all item names in the second list
+service.get("/second_list", (request, response) => {
+
+  const params = "";
+  const query = 'SELECT item FROM second_list';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
@@ -304,13 +326,15 @@ service.listen(port, () => {
   console.log(`We're live in port ${port}!`);
 });
 
+// GET FUNCTIONS
+// curl http://localhost:5001/first_list/1
+// curl http://localhost:5001/second_list/4
+// curl http://localhost:5001/first_list
+// curl http://localhost:5001/second_list
+// curl http://localhost:5001/all
 
-// curl http://localhost:5001/humans/1
-
+// POST CURL FUNCTION ( to test, change the item name and which list you want to add to)
 // curl --header 'Content-Type: application/json' \
 // --data '{"item" : "bird"}' \
 // http://localhost:5001/first_list
 
-// curl --request POST http://localhost:5001/follow/1/2
-
-// curl http://localhost:5001/follow/1
