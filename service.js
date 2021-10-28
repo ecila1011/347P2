@@ -97,6 +97,7 @@ service.post('/second_list', (request, response) => {
           response.json({
             ok: true,
             results: result.insertId,
+            used: false,
           });
         }
       });
@@ -113,7 +114,54 @@ service.post('/second_list', (request, response) => {
   
 });
 
-// get an item from the first list using the given id (to be changed later so that it is random)
+// get both lists (all possible item entries)
+service.get("/all", (request, response) => {
+
+  const params = [parseInt(request.params.id)];
+  const query = 'SELECT * FROM first_list';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
+      response.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+
+      response.json({
+        ok: true,
+        results: rows.map(rowFormat),
+        used: true,
+      });
+    }
+  });
+});
+
+// get all item names in the first list
+service.get("/first_list", (request, response) => {
+
+  const params = "";
+  const query = 'SELECT item FROM first_list';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
+      response.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+
+      response.json({
+        ok: true,
+        results: rows.map(rowFormat),
+      });
+    }
+  });
+});
+
+// get an item from the first list using the given id
 service.get("/first_list/:id", (request, response) => {
 
     const params = [parseInt(request.params.id)];
@@ -131,13 +179,14 @@ service.get("/first_list/:id", (request, response) => {
         response.json({
           ok: true,
           results: rows.map(rowFormat),
+          used: true,
         });
       }
     });
   
 });
 
-// get an item from the second list using the given id (to be changed later so that it is random)
+// get an item from the second list using the given id
 service.get("/second_list/:id", (request, response) => {
 
     const params = [parseInt(request.params.id)];
@@ -153,13 +202,60 @@ service.get("/second_list/:id", (request, response) => {
       } else {
         response.json({
           ok: true,
+          used: true,
         });
       }
     });
   
 });
 
-// delete an item from the first list
+// reset the used boolean for an item using the item id
+service.patch("/first_list/:id", (request, response) => {
+
+  const params = [parseInt(request.params.id)];
+  const query = 'SELECT * FROM first_list WHERE id = ?';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
+      response.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+      response.json({
+        ok: true,
+        used: false,
+      });
+    }
+  });
+
+});
+
+// reset the used boolean for an item using the item id
+service.patch("/second_list/:id", (request, response) => {
+
+  const params = [parseInt(request.params.id)];
+  const query = 'SELECT * FROM second_list WHERE id = ?';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
+      response.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+      response.json({
+        ok: true,
+        used: false,
+      });
+    }
+  });
+
+});
+
+// delete an item from the first list given the id
 service.delete('/first_list/:id', (request, response) => {
 
   const params = [parseInt(request.params.id)];
@@ -181,7 +277,7 @@ service.delete('/first_list/:id', (request, response) => {
   
 });
 
-// delete an item from the second list
+// delete an item from the second list given the id
 service.delete('/second_list/:id', (request, response) => {
 
   const params = [parseInt(request.params.id)];
