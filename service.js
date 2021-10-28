@@ -29,19 +29,23 @@ connection.connect(error => {
   }
 });
 
-//*************** */ ADDING HERE ****************//
-// Query for inserting a new row into database (Date Given)
-service.post('/', (request, response) => {
+function rowFormat(row) {
+    return {
+      entry: row.item,
+    };
+}
 
-    if (request.body.hasOwnProperty('username') &&
-      request.body.hasOwnProperty('screen_name')) {
+//*************** */ ADDING HERE ****************//
+// Query for inserting a new entry into the first list
+service.post('/first_list', (request, response) => {
+
+    if (request.body.hasOwnProperty('item')) {
   
       const params = [
-        request.body.username,
-        request.body.screen_name,
+        request.body.item,
       ];
   
-      const query = 'INSERT INTO humans(username, screen_name) VALUES (?, ?)';
+      const query = 'INSERT INTO first_list(item) VALUES (?)';
   
       connection.query(query, params, (error, result) => {
         if (error) {
@@ -64,11 +68,171 @@ service.post('/', (request, response) => {
       response.status(400);
       response.json({
         ok: false,
-        results: 'Incomplete expenses data.',
+        results: 'Incomplete entry.',
       });
     }
   
-  });
+});
+
+// Query for inserting a new entry into the second list
+service.post('/second_list', (request, response) => {
+
+    if (request.body.hasOwnProperty('item')) {
+  
+      const params = [
+        request.body.item,
+        ];
+  
+      const query = 'INSERT INTO second_list(item) VALUES (?)';
+  
+      connection.query(query, params, (error, result) => {
+        if (error) {
+          response.status(500);
+          response.json({
+            ok: false,
+            results: error.message,
+          });
+        } else {
+          response.json({
+            ok: true,
+            results: result.insertId,
+          });
+        }
+      });
+  
+  
+    } else {
+  
+      response.status(400);
+      response.json({
+        ok: false,
+        results: 'Incomplete entry.',
+      });
+    }
+  
+});
+
+// get an item from the first list using the given id (to be changed later so that it is random)
+service.get("/first_list/:id", (request, response) => {
+
+    const params = [parseInt(request.params.id)];
+    const query = 'SELECT * FROM first_list WHERE id = ?';
+  
+    connection.query(query, params, (error, rows) => {
+      if (error) {
+        response.status(500);
+        response.json({
+          ok: false,
+          results: error.message,
+        });
+      } else {
+  
+        response.json({
+          ok: true,
+          results: rows.map(rowFormat),
+        });
+      }
+    });
+  
+});
+
+// get an item from the second list using the given id (to be changed later so that it is random)
+service.get("/second_list/:id", (request, response) => {
+
+    const params = [parseInt(request.params.id)];
+    const query = 'SELECT * FROM second_list WHERE id = ?';
+  
+    connection.query(query, params, (error, rows) => {
+      if (error) {
+        response.status(500);
+        response.json({
+          ok: false,
+          results: error.message,
+        });
+      } else {
+        response.json({
+          ok: true,
+        });
+      }
+    });
+  
+});
+
+// delete an item from the first list
+service.delete('/first_list/:item', (request, response) => {
+
+    if (request.body.hasOwnProperty('item')) {
+  
+      const params = [
+        request.body.item,
+      ];
+  
+      const query = 'UPDATE first_list SET is_deleted = 1 WHERE item = ?';
+  
+      connection.query(query, params, (error, result) => {
+        if (error) {
+          response.status(500);
+          response.json({
+            ok: false,
+            results: error.message,
+          });
+        } else {
+          response.json({
+            ok: true,
+            results: result.insertId,
+          });
+        }
+      });
+  
+  
+    } else {
+  
+      response.status(400);
+      response.json({
+        ok: false,
+        results: `No such word`,
+      });
+    }
+  
+});
+
+// delete an item from the second list
+service.delete('/second_list/:item', (request, response) => {
+
+    if (request.body.hasOwnProperty('item')) {
+  
+      const params = [
+        request.body.item,
+      ];
+  
+      const query = 'UPDATE second_list SET is_deleted = 1 WHERE item = ?';
+  
+      connection.query(query, params, (error, result) => {
+        if (error) {
+          response.status(500);
+          response.json({
+            ok: false,
+            results: error.message,
+          });
+        } else {
+          response.json({
+            ok: true,
+            results: result.insertId,
+          });
+        }
+      });
+  
+  
+    } else {
+  
+      response.status(400);
+      response.json({
+        ok: false,
+        results: `No such word`,
+      });
+    }
+  
+});
 
 const port = 5001;
 service.listen(port, () => {
