@@ -118,7 +118,7 @@ service.post('/second_list', (request, response) => {
 service.get("/all", (request, response) => {
 
   const params = "";
-  const query = 'SELECT id, item, used FROM first_list, second_list';
+  const query = 'SELECT id, item, used FROM first_list';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
