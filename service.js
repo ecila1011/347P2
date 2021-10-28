@@ -233,29 +233,29 @@ service.get("/second_list/:id", (request, response) => {
   
 });
 
-// Randomly select an item from each list
-service.get("/random", (request, response) => {
+// // Randomly select an item from each list
+// service.get("/random", (request, response) => {
 
-  const params = "";
-  const query = 'SELECT * FROM first_list, second_list ORDER BY NEWID()';
+//   const params = "";
+//   const query = 'SELECT * FROM first_list, second_list ORDER BY NEWID()';
 
-  connection.query(query, params, (error, rows) => {
-    if (error) {
-      response.status(500);
-      response.json({
-        ok: false,
-        results: error.message,
-      });
-    } else {
+//   connection.query(query, params, (error, rows) => {
+//     if (error) {
+//       response.status(500);
+//       response.json({
+//         ok: false,
+//         results: error.message,
+//       });
+//     } else {
 
-      response.json({
-        ok: true,
-        results: rows.map(rowFormat),
-      });
-    }
-  });
+//       response.json({
+//         ok: true,
+//         results: rows.map(rowFormat),
+//       });
+//     }
+//   });
 
-});
+// });
 
 // fix the spelling of a word in the first list
 service.patch("/first_list/:id", (request, response) => {
