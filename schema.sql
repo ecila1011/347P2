@@ -4,11 +4,13 @@ DROP TABLE IF EXISTS second_list;
 CREATE TABLE first_list (
   id SERIAL PRIMARY KEY,
   item TEXT
+  used BOOLEAN
 );
 
 CREATE TABLE second_list (
   id SERIAL PRIMARY KEY,
   item TEXT
+  used BOOLEAN
 );
 
 -- Comments --

@@ -31,7 +31,7 @@ connection.connect(error => {
 
 function rowFormat(row) {
     return {
-      entry: row.item,
+      item: row.item,
     };
 }
 
@@ -58,6 +58,7 @@ service.post('/first_list', (request, response) => {
           response.json({
             ok: true,
             results: result.insertId,
+            used: false,
           });
         }
       });
@@ -159,78 +160,46 @@ service.get("/second_list/:id", (request, response) => {
 });
 
 // delete an item from the first list
-service.delete('/first_list/:item', (request, response) => {
+service.delete('/first_list/:id', (request, response) => {
 
-    if (request.body.hasOwnProperty('item')) {
-  
-      const params = [
-        request.body.item,
-      ];
-  
-      const query = 'UPDATE first_list SET is_deleted = 1 WHERE item = ?';
-  
-      connection.query(query, params, (error, result) => {
-        if (error) {
-          response.status(500);
-          response.json({
-            ok: false,
-            results: error.message,
-          });
-        } else {
-          response.json({
-            ok: true,
-            results: result.insertId,
-          });
-        }
-      });
-  
-  
-    } else {
-  
-      response.status(400);
+  const params = [parseInt(request.params.id)];
+  const query = 'DELETE FROM first_list WHERE id = ?';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
       response.json({
         ok: false,
-        results: `No such word`,
+        results: error.message,
+      });
+    } else {
+      response.json({
+        ok: true,
       });
     }
+  });
   
 });
 
 // delete an item from the second list
-service.delete('/second_list/:item', (request, response) => {
+service.delete('/second_list/:id', (request, response) => {
 
-    if (request.body.hasOwnProperty('item')) {
-  
-      const params = [
-        request.body.item,
-      ];
-  
-      const query = 'UPDATE second_list SET is_deleted = 1 WHERE item = ?';
-  
-      connection.query(query, params, (error, result) => {
-        if (error) {
-          response.status(500);
-          response.json({
-            ok: false,
-            results: error.message,
-          });
-        } else {
-          response.json({
-            ok: true,
-            results: result.insertId,
-          });
-        }
-      });
-  
-  
-    } else {
-  
-      response.status(400);
+  const params = [parseInt(request.params.id)];
+  const query = 'DELETE FROM second_list WHERE id = ?';
+
+  connection.query(query, params, (error, rows) => {
+    if (error) {
+      response.status(500);
       response.json({
         ok: false,
-        results: `No such word`,
+        results: error.message,
+      });
+    } else {
+      response.json({
+        ok: true,
       });
     }
+  });
   
 });
 
@@ -243,8 +212,8 @@ service.listen(port, () => {
 // curl http://localhost:5001/humans/1
 
 // curl --header 'Content-Type: application/json' \
-// --data '{"username": "user", "screen_name": "name"}' \
-// http://localhost:5001/humans
+// --data '{"item" : "bird"}' \
+// http://localhost:5001/first_list
 
 // curl --request POST http://localhost:5001/follow/1/2
 
