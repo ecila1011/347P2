@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const mysql = require('mysql');
+const path = require('path');
 
 const credentials = JSON.parse(fs.readFileSync('credentials.json', 'utf8'));
 const connection = mysql.createConnection(credentials);
@@ -36,26 +37,9 @@ function rowFormat(row) {
 }
 
 //*************** */ ADDING HERE ****************//
-service.get('/report.html', function (req, res, next) {
-
-  var options = {
-    root: path.join(__dirname, 'public'),
-    dotfiles: 'deny',
-    headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true
-    }
-  }
-
-  var fileName = "report.html";
-  res.sendFile(fileName, options, function (err) {
-    if (err) {
-      next(err)
-    } else {
-      console.log('Sent:', fileName)
-    }
-  })
-})
+service.get('/report.html', function(req, res) {
+  res.sendFile(path.join(__dirname, '/report.html'));
+});
 
 // Query for inserting a new entry into the first list
 service.post('/first_list', (request, response) => {
