@@ -38,6 +38,15 @@ function rowFormat(row) {
 //*************** */ ADDING HERE ****************//
 service.get('/report.html', function (req, res, next) {
 
+  var options = {
+    root: path.join(__dirname, 'public'),
+    dotfiles: 'deny',
+    headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true
+    }
+  }
+
   var fileName = "report.html";
   res.sendFile(fileName, options, function (err) {
     if (err) {
