@@ -237,7 +237,7 @@ service.get("/second_list/:id", (request, response) => {
 service.get("/random", (request, response) => {
 
   const params = "";
-  const query = 'SELECT TOP 1 item FROM first_list, second_list ORDER BY NEWID()';
+  const query = 'SELECT * FROM first_list, second_list ORDER BY NEWID()';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
