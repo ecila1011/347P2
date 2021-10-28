@@ -119,7 +119,7 @@ service.post('/second_list', (request, response) => {
 });
 
 // get all item info from both lists
-service.get("/first_list", (request, response) => {
+service.get("/all", (request, response) => {
 
   const params = "";
   const query = 'SELECT * FROM first_list, second_list';
