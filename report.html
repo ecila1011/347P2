@@ -30,5 +30,23 @@
 <p>13. My database's creation and schema scripts are included in my repository</p>
 <p>14. My git has a steady flow of commits</p>
 <p>15. If you are seeing this, then I have sucessfully gotten my report html published properly</p>
+
+<h2>Endpoints</h2>
+<p>Posting: </p>
+<p>/first_list and /second_list</p>
+<p>In the example curl function below, you would send in data as "item" and then the word you'd like to add to the list</p>
+<p>// curl --header 'Content-Type: application/json' --data '{"item" : "bird"}' http://localhost:5001/first_list</p>
+<p>Get: </p>
+<p>/first_list prints all of the items in the first list</p>
+<p>/second_list prints all of the items in the second list</p>
+<p>/first_list/:id prints the item from the first list with the specified id</p>
+<p>/second_list/:id prints the item from the second list with the specified id</p>
+<p>Patch:</p>
+<p>/first_list/:id updates the spelling of a item in the first list with the specified id</p>
+<p>/second_list/:id updates the spelling of a item in the second list with the specified id</p>
+<p>Delete:</p>
+<p>/first_list/:id deletes the item with the specified id</p>
+<p>/second_list/:id deletes the item with the specified id</p>
+
 </body>
 </html>
