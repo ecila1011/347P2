@@ -227,6 +227,7 @@ service.get("/second_list/:id", (request, response) => {
       } else {
         response.json({
           ok: true,
+          results: rows.map(rowFormat),
         });
       }
     });
@@ -264,7 +265,7 @@ service.patch("/first_list/:id", (request, response) => {
     request.body.item,
     parseInt(request.params.id)
   ];
-  const query = 'UPDATE item FROM first_list WHERE id = ?';
+  const query = 'UPDATE item FROM first_list SET item = ? WHERE id = ?';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
@@ -291,7 +292,7 @@ service.patch("/second_list/:id", (request, response) => {
     request.body.item,
     parseInt(request.params.id)
   ];
-  const query = 'UPDATE item FROM second_list WHERE id = ?';
+  const query = 'UPDATE item FROM second_list SET item = ? WHERE id = ?';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
