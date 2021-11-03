@@ -265,7 +265,7 @@ service.patch("/first_list/:id", (request, response) => {
     request.body.item,
     parseInt(request.params.id)
   ];
-  const query = 'UPDATE item FROM first_list SET item = ? WHERE id = ?';
+  const query = 'UPDATE first_list SET item = ? WHERE id = ?';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
