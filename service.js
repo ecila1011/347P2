@@ -292,7 +292,7 @@ service.patch("/second_list/:id", (request, response) => {
     request.body.item,
     parseInt(request.params.id)
   ];
-  const query = 'UPDATE item FROM second_list SET item = ? WHERE id = ?';
+  const query = 'UPDATE second_list SET item = ? WHERE id = ?';
 
   connection.query(query, params, (error, rows) => {
     if (error) {
